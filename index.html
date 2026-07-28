@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamyon - Tizimga kirish</title>
+    <style>
+        :root {
+            --accent: #FFC947;
+            --accent-dark: #e0a92f;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        html, body { height: 100%; }
+        body {
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); overflow: hidden; color: white;
+            position: relative;
+        }
+
+        /* Orqa fondagi jonli shakllar (coin / card motividagi) */
+        .shape { position: absolute; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; animation: float 12s infinite ease-in-out; z-index: 0; }
+        .shape:nth-child(1) { width: 120px; height: 120px; left: 8%; top: 18%; }
+        .shape:nth-child(2) { width: 150px; height: 150px; right: 10%; bottom: 12%; animation-duration: 15s; animation-direction: reverse; }
+
+        .coin {
+            position: absolute; border-radius: 50%; z-index: 0; opacity: 0.85;
+            background: radial-gradient(circle at 35% 30%, #ffe9a8, var(--accent) 55%, var(--accent-dark) 100%);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.35), inset 0 0 0 2px rgba(255,255,255,0.35);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; color: rgba(120,80,0,0.55); user-select: none;
+            animation: coinFloat 9s ease-in-out infinite;
+        }
+        .coin:nth-child(3) { width: 46px; height: 46px; font-size: 18px; left: 14%; bottom: 22%; animation-delay: 0s; }
+        .coin:nth-child(4) { width: 30px; height: 30px; font-size: 12px; right: 18%; top: 16%; animation-delay: 1.2s; animation-duration: 7s; }
+        .coin:nth-child(5) { width: 60px; height: 60px; font-size: 22px; right: 8%; top: 55%; animation-delay: 0.6s; animation-duration: 11s; }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+        @keyframes coinFloat {
+            0%, 100% { transform: translateY(0) rotateY(0deg); }
+            50% { transform: translateY(-18px) rotateY(180deg); }
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            padding: 40px 30px; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2); text-align: center; width: 90%; max-width: 400px; z-index: 1;
+            animation: riseIn 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @keyframes riseIn {
+            0% { opacity: 0; transform: translateY(28px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .wallet-icon {
+            width: 64px; height: 64px; margin: 0 auto 14px; border-radius: 18px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 20px rgba(255, 201, 71, 0.35);
+            animation: pulseWallet 2.6s ease-in-out infinite;
+        }
+        @keyframes pulseWallet {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 20px rgba(255, 201, 71, 0.35); }
+            50% { transform: scale(1.06); box-shadow: 0 10px 26px rgba(255, 201, 71, 0.5); }
+        }
+        .wallet-icon svg { width: 34px; height: 34px; }
+
+        .login-box h1 { font-size: 32px; margin-bottom: 10px; letter-spacing: 1px; }
+
+        .features { text-align: left; background: rgba(0,0,0,0.15); padding: 20px; border-radius: 15px; margin-bottom: 30px; font-size: 14px; line-height: 1.6; }
+        .features ul { list-style: none; }
+        .features ul li { opacity: 0; animation: featureIn 0.5s ease forwards; }
+        .features ul li:nth-child(1) { animation-delay: 0.25s; }
+        .features ul li:nth-child(2) { animation-delay: 0.4s; }
+        .features ul li:nth-child(3) { animation-delay: 0.55s; }
+        .features ul li:nth-child(4) { animation-delay: 0.7s; }
+        @keyframes featureIn {
+            0% { opacity: 0; transform: translateX(-10px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        .features ul li::before { content: "✓ "; color: #42e695; font-weight: bold; }
+
+        .google-btn {
+            position: relative; overflow: hidden;
+            background-color: white; color: #333; border: none; padding: 14px 20px; font-size: 16px; font-weight: 600;
+            border-radius: 30px; cursor: pointer; width: 100%; display: flex; justify-content: center; align-items: center;
+            gap: 12px; transition: transform 0.25s ease, box-shadow 0.25s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .google-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+        .google-btn:active { transform: translateY(-1px) scale(0.97); }
+        .google-btn svg { width: 24px; height: 24px; }
+        .google-btn.is-loading { pointer-events: none; opacity: 0.75; }
+        .google-btn .btn-label { transition: opacity 0.2s ease; }
+        .google-btn.is-loading .btn-label { opacity: 0.6; }
+
+        .spinner {
+            display: none; width: 18px; height: 18px; border-radius: 50%;
+            border: 2.5px solid rgba(51,51,51,0.25); border-top-color: #333;
+            animation: spin 0.7s linear infinite;
+        }
+        .google-btn.is-loading .spinner { display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Ripple effekt - har bir bosishda jonli animatsiya */
+        .ripple {
+            position: absolute; border-radius: 50%; transform: scale(0);
+            background: rgba(0,0,0,0.15); pointer-events: none;
+            animation: rippleAnim 0.6s ease-out;
+        }
+        @keyframes rippleAnim {
+            to { transform: scale(2.8); opacity: 0; }
+        }
+
+        .error-box {
+            margin-top: 14px; background: rgba(244, 67, 54, 0.18); border: 1px solid rgba(244, 67, 54, 0.4);
+            color: #ffcdd2; padding: 10px 14px; border-radius: 12px; font-size: 13px; text-align: left;
+            display: none; animation: shake 0.4s ease;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="shape"></div><div class="shape"></div>
+    <div class="coin">$</div><div class="coin">so'm</div><div class="coin">₽</div>
+
+    <div class="login-box">
+        <div class="wallet-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 7C3 5.34315 4.34315 4 6 4H17C18.6569 4 20 5.34315 20 7V17C20 18.6569 18.6569 20 17 20H6C4.34315 20 3 18.6569 3 17V7Z" stroke="white" stroke-width="1.6"/>
+                <path d="M14 12.5C14 13.6046 14.8954 14.5 16 14.5H20V10.5H16C14.8954 10.5 14 11.3954 14 12.5Z" fill="white"/>
+            </svg>
+        </div>
+        <h1>Hamyon</h1>
+
+        <div class="features">
+            <p style="margin-bottom: 10px; color: #ddd;" data-i18n="featuresIntro">Dastur imkoniyatlari:</p>
+            <ul>
+                <li data-i18n="feature1">Barcha kirim va chiqimlarni nazorat qilish</li>
+                <li data-i18n="feature2">Qarzlar va to'lovlar hisobini yuritish</li>
+                <li data-i18n="feature3">Oylik va kunlik statistika</li>
+                <li data-i18n="feature4">Ma'lumotlarning xavfsiz saqlanishi</li>
+            </ul>
+        </div>
+
+        <button id="google-login-btn" class="google-btn">
+            <svg viewBox="0 0 48 48">
+                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+                <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                <path fill="none" d="M0 0h48v48H0z"></path>
+            </svg>
+            <span class="btn-label" data-i18n="googleLogin">Google bilan kirish</span>
+            <span class="spinner"></span>
+        </button>
+
+        <div class="error-box" id="error-box"></div>
+    </div>
+
+    <script>
+        // ---- Til (i18n) tizimi: butun ilova bo'ylab bir xil kalit ishlatiladi ----
+        const I18N = {
+            uz: {
+                featuresIntro: "Dastur imkoniyatlari:",
+                feature1: "Barcha kirim va chiqimlarni nazorat qilish",
+                feature2: "Qarzlar va to'lovlar hisobini yuritish",
+                feature3: "Oylik va kunlik statistika",
+                feature4: "Ma'lumotlarning xavfsiz saqlanishi",
+                googleLogin: "Google bilan kirish",
+                errorPrefix: "Xatolik: "
+            },
+            ru: {
+                featuresIntro: "Возможности приложения:",
+                feature1: "Контроль всех доходов и расходов",
+                feature2: "Учёт долгов и платежей",
+                feature3: "Ежемесячная и ежедневная статистика",
+                feature4: "Безопасное хранение данных",
+                googleLogin: "Войти через Google",
+                errorPrefix: "Ошибка: "
+            },
+            en: {
+                featuresIntro: "App features:",
+                feature1: "Track all income and expenses",
+                feature2: "Manage debts and payments",
+                feature3: "Monthly and daily statistics",
+                feature4: "Secure data storage",
+                googleLogin: "Sign in with Google",
+                errorPrefix: "Error: "
+            }
+        };
+
+        function getLang() {
+            return localStorage.getItem('hamyon_lang') || 'uz';
+        }
+
+        function applyTranslations() {
+            const lang = getLang();
+            const dict = I18N[lang] || I18N.uz;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) el.textContent = dict[key];
+            });
+        }
+        applyTranslations();
+
+        // ---- Dizayn rangi (accent) - profil bo'limida tanlangan rang shu yerda ham aks etadi ----
+        (function applyAccent() {
+            const accent = localStorage.getItem('hamyon_accent');
+            if (accent) {
+                document.documentElement.style.setProperty('--accent', accent);
+                document.documentElement.style.setProperty('--accent-dark', accent);
+            }
+        })();
+
+        // ---- Har bir tugma bosilganda jonli "ripple" animatsiyasi ----
+        function attachRipple(el) {
+            el.addEventListener('click', function (e) {
+                const rect = el.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                const size = Math.max(rect.width, rect.height);
+                ripple.className = 'ripple';
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+                ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+                el.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 650);
+            });
+        }
+        document.querySelectorAll('.google-btn').forEach(attachRipple);
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKfRC_QAtelZjUkCqLrvOW0mU3Rq8Hrb0",
+            authDomain: "hamyon-79b8b.firebaseapp.com",
+            projectId: "hamyon-79b8b",
+            storageBucket: "hamyon-79b8b.firebasestorage.app",
+            messagingSenderId: "385159410484",
+            appId: "1:385159410484:web:5d6fab7ccc25fe428dab61"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        const loginBtn = document.getElementById('google-login-btn');
+        const errorBox = document.getElementById('error-box');
+
+        function showError(message) {
+            const lang = localStorage.getItem('hamyon_lang') || 'uz';
+            const prefix = { uz: "Xatolik: ", ru: "Ошибка: ", en: "Error: " }[lang] || "Xatolik: ";
+            errorBox.textContent = prefix + message;
+            errorBox.style.display = 'block';
+        }
+
+        // Agar foydalanuvchi oldin kirgan bo'lsa, to'g'ridan-to'g'ri asosiy oynaga o'tkazish
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.href = "dashboard.html";
+            }
+        });
+
+        loginBtn.addEventListener('click', () => {
+            loginBtn.classList.add('is-loading');
+            errorBox.style.display = 'none';
+            signInWithPopup(auth, provider)
+                .catch((error) => {
+                    showError(error.message);
+                })
+                .finally(() => {
+                    loginBtn.classList.remove('is-loading');
+                });
+        });
+    </script>
+</body>
+</html>
