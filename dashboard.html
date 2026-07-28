@@ -941,6 +941,9 @@
                 snapshot.forEach(docSnap => cards.push({ id: docSnap.id, ...docSnap.data() }));
                 window.__userCards = cards;
                 window.renderCardsGlobal();
+            }, (error) => {
+                console.error("Kartalarni yuklashda xatolik:", error);
+                alert("Kartalarni yuklashda xatolik: " + error.message);
             });
         }
 
@@ -1005,6 +1008,9 @@
                 if(balance < 0) balanceEl.style.color = "#ff8a80";
                 else if(balance > 0) balanceEl.style.color = "#a5d6a7";
                 else balanceEl.style.color = "#ffffff";
+            }, (error) => {
+                console.error("Tranzaksiyalarni yuklashda xatolik:", error);
+                alert("Tarixni yuklashda xatolik: " + error.message);
             });
         }
     </script>
